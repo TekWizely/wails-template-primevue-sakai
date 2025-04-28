@@ -1,0 +1,11 @@
+node_modules
+coverage
+*.log*
+.nuxt
+.nitro
+.cache
+.output
+.env
+dist
+.eslintcache
+api-generator/typedoc.json

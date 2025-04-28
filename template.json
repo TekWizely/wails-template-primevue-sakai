@@ -1,0 +1,7 @@
+{
+  "name": "Wails PrimeVue Sakai Template",
+  "shortname": "primevue-sakai",
+  "author": "TekWizely <TekWizely@gmail.com>",
+  "description": "A Wails starter for using Go with PrimeVue's Sakai application template",
+  "helpurl": "https://github.com/TekWizely/wails-template-primevue-sakai"
+}

@@ -7,7 +7,7 @@ const model = ref([
     {
         label: 'Home',
         items: [
-            { label: 'Wails', icon: 'pi pi-fw pi-home', to: '/' }
+            { label: 'Welcome', icon: 'pi pi-fw pi-home', to: '/' }
         ]
     },
     {
@@ -134,12 +134,6 @@ const model = ref([
                 label: 'Documentation',
                 icon: 'pi pi-fw pi-book',
                 to: '/documentation'
-            },
-            {
-                label: 'View Source',
-                icon: 'pi pi-fw pi-github',
-                url: 'https://github.com/primefaces/sakai-vue',
-                target: '_blank'
             }
         ]
     }

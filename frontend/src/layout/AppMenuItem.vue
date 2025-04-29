@@ -2,6 +2,7 @@
 import { useLayout } from '@/layout/composables/layout';
 import { onBeforeMount, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import {BrowserOpenURL} from "../../wailsjs/runtime";
 
 const route = useRoute();
 
@@ -52,6 +53,13 @@ function itemClick(event, item) {
 
     if ((item.to || item.url) && (layoutState.staticMenuMobileActive || layoutState.overlayMenuActive)) {
         toggleMenu();
+    }
+
+    // Defer URL handling to Wails
+    if (item.url) {
+        event.preventDefault();
+        // Opens the given URL in the system browser.
+        BrowserOpenURL(item.url)
     }
 
     if (item.command) {

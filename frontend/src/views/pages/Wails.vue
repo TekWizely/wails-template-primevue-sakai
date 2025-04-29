@@ -1,35 +1,19 @@
 <script setup>
-import HelloWorld from '@/components/Greet.vue'
+import Greet from '@/components/Greet.vue'
 </script>
 
 <template>
-    <div id="wails-main">
-        <img id="logo" alt="Wails logo" src="../../assets/images/wails-logo-universal.png"/>
-        <main><Greet/></main>
+    <div>
+        <div class="grid grid-cols-12 h-fit min-h-fit w-fit min-w-fit gap-4">
+            <div class="col-span-12 bg-primary dark:bg-primary-contrast">
+                <img class="h-auto w-auto object-contain p-10" id="logo" alt="Wails logo" src="../../assets/images/wails-logo-universal.png"/>
+            </div>
+            <div class="col-span-12">
+                <Greet/>
+            </div>
+        </div>
     </div>
 </template>
 
 <style>
-#wails-main {
-    height: 100vh;
-    text-align: center;
-    background-color: rgba(27, 38, 54, 1);
-    color: white;
-    margin: 0;
-    font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-}
-
-#logo {
-    display: block;
-    width: 50%;
-    height: 50%;
-    margin: auto;
-    padding: 10% 0 0;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    background-origin: content-box;
-}
 </style>

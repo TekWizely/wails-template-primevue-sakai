@@ -1,5 +1,7 @@
 
-## wails-template-primevue-sakai 
+## Wails + PrimeVue + Sakai
+
+![Screenshot](./screenshot.png)
 
 A Wails starter for using Go with PrimeVue's Sakai application template.
 

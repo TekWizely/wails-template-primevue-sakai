@@ -18,8 +18,6 @@ A Wails starter for using Go with PrimeVue's Sakai application template.
 Create a new project from this template:
 ```sh
 wails init -n myproject -t https://github.com/TekWizely/wails-template-primevue-sakai
-
-cd myproject
 ```
 
 Remove the `.github` folder as it only exists to serve the template's github page

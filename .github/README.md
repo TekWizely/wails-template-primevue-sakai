@@ -87,7 +87,7 @@ If HMR is giving you issues, or if you just want to disable it, you can modify t
 
 **Remember:** With the default `wails.json` configuration, disabling Vite's HMR will result in Wails not reloading the browser when you make changes in the `frontend` folder.
 
-##### Wails Automatic Reload
+#### Wails Automatic Reload
 
 If you disable HMR, you can still use Wails' _automatic reload_ feature by adding the `frontend` folder to the `reloaddirs` property in `wails.json`:
 
@@ -111,7 +111,7 @@ _wails.json (no hmr)_
 
 **Note:** You may need to tweak `debounceMS` if Wails opens/reloads the browser before the Vite dev server is ready.
 
-##### Vite Build-Watch Mode
+#### Vite Build-Watch Mode
 
 One final option for gaining automatic reloading is to use Vite's `build --watch` mode, which triggers a build whenever a file changes in the `frontend` folder.
 

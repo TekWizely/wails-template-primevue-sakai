@@ -11,21 +11,139 @@ A Wails starter for using Go with PrimeVue's Sakai application template.
 * [PrimeVue](https://primevue.org/)
 * [Sakai Application Template](https://sakai.primevue.org/)
 
-## Use
+## Getting Started
 
+**NOTE:** Assumes `go`, `node`, and `wails` are already installed.
+
+Create a new project from this template:
 ```sh
-wails init -n projectname -t https://github.com/TekWizely/wails-template-primevue-sakai
+wails init -n myproject -t https://github.com/TekWizely/wails-template-primevue-sakai
+
+cd myproject
+```
+
+Remove the `.github` folder as it only exists to serve the template's github page
+```sh
+rm -rf .github
 ```
 
 ## Live Development
 
-To run in live development mode, run `wails dev` in the project directory. In another terminal, go into the `frontend`
-directory and run `npm run dev`. The frontend dev server will run on http://localhost:34115. Connect to this in your
-browser and connect to your application.
+To get started, run `wails dev` in the project folder.
+
+This will start both the `frontend` and `backend` components and open a browser to connect to the application.
+
+For more details on development options, please refer to the [Dev Command Reference](https://wails.io/docs/reference/cli/#dev).
+
+
+### Reload On File Change
+
+In dev mode, Wails watches the configured _asset folder_ (`frontend/dist`) and automatically reloads the browser when changes are detected.
+
+Unfortunately, Vite's dev-mode server does not build/copy files into the `dist` folder, but instead processes/serves them directly.  As a result, Wails' watchers are never triggered.
+
+However, Vite's dev-mode server enables its own built-in HMR (Hot Module Reload) feature by default.
+
+#### Vite Hot Model Reload
+
+This template is configured to use the HMR feature via the following properties in `wails.json` and `vite.config.js`:
+
+_wails.json (hmr)_
+```json5
+{
+  // ...
+  "frontend:dev:build"    : "npm run clean-dist",
+  "frontend:dev:watcher"  : "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "debounceMS"            : 500,
+  // ...
+}
+```
+_vite.config.json_
+```json5
+{
+  hmr: {
+    host: "localhost",
+    protocol: "ws"
+  }
+}
+```
+
+**Note:** You may need to tweak `debounceMS` if Wails opens the browser before the Vite dev server is ready.
+
+#### Disabling HMR
+
+If HMR is giving you issues, or if you just want to disable it, you can modify the configuration in `vite.config.js`:
+
+```json5
+{
+  hmr: false
+  // hmr: {
+  //     host: "localhost",
+  //     protocol: "ws",
+  // }
+}
+```
+
+**Remember:** With the default `wails.json` configuration, disabling Vite's HMR will result in Wails not reloading the browser when you make changes in the `frontend` folder.
+
+#### Wails Automatic Reload
+
+If you disable HMR, you can still use Wails' _automatic reload_ feature by adding the `frontend` folder to the `reloaddirs` property in `wails.json`:
+
+Here's the relevant set of properties in `wails.json` with the `reloaddirs` property added:
+
+_wails.json (no hmr)_
+```json5
+{
+  // ...
+  "reloaddirs"            : "frontend",
+  "frontend:dir"          : "frontend",
+  "frontend:install"      : "npm install",
+  "frontend:build"        : "npm run build",
+  "frontend:dev:build"    : "npm run clean-dist",
+  "frontend:dev:watcher"  : "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "debounceMS"            : 500,
+  // ...
+}
+```
+
+**Note:** You may need to tweak `debounceMS` if Wails opens/reloads the browser before the Vite dev server is ready.
+
+#### Vite Build-Watch Mode
+
+One final option for gaining automatic reloading is to use Vite's `build --watch` mode, which triggers a build whenever a file changes in the `frontend` folder.
+
+Since `vite build` places the build assets into the `frontend/dist` folder, and Wails automatically watches that folder in _dev_ mode, changes _should_ automatically reload the browser.
+
+Be aware that, in this mode, Vite's dev server is not started.
+
+Here's the relevant set of properties in `wails.json` for the _build-watch_ mode:
+
+_wails.json (build-watch)_
+```json5
+{
+  // ...
+  "frontend:dir"        : "frontend",
+  "frontend:install"    : "npm install",
+  "frontend:build"      : "npm run build",
+  "frontend:dev:build"  : "npm run dev-build",
+  "frontend:dev:watcher": "npm run dev-build-watch",
+  "debounceMS"          : 2000,
+  // ...
+}
+```
+**Note:** The `debounceMS` value is larger to accommodate the extra time needed to do a full build.  Just the same, you may still need to tweak it if Wails opens/reloads the browser before the build completes.
+
 
 ## Building
 
 To build a redistributable, production mode package, use `wails build`.
+
+This will compile your project and save the binary/app in the `build/bin` folder.
+
+For more details on compilation options, please refer to the [Build Command Reference](https://wails.io/docs/reference/cli/#build).
 
 ## Version Info
 
@@ -40,14 +158,65 @@ This template was built and tested using:
 
 ### Wails (`/`)
 
-* Added a starter `.gitignore`
+**Ran `go mod tidy`:**
+* Updated `go.tmpl.mod`
+* Updated `go.sum`
+
+* Added a starter `gitignore.txt`
+  * Gets renamed to `.gitignore` when template is installed
 * Moved the `Greet()` function into it own file, `greet.go`
 * Changed Mac TitleBar property `TitlebarAppearsTransparent` from `true` to `false`
 * Disabled App Properties `MaxWidth` and `MaxHeight`
+* Renamed `app.tmpl.go` to simply `app.go` as it has no template elements
+* Renamed `main.go.tmpl` to `main.go.tmpl` to match convention
+ 
+**Modified `go.tmpl.mod`:**
+* Set `module.name` to be `{{.ProjectName}}`
+* Updated file with results of `go mod tidy`
+  * Updated go from `1.18` to `1.22`
+  * Added `toolchain go1.24.1`
+  * Updated various`require` modules / versions
+
+**Modified `go.sum`:**
+* Changes made via `go mod tidy`
+
+**Modified `wails.tmpl.json`:**
+* Added properties:
+  * `"frontend:dir"          : "frontend"`
+  * `"frontend:dev:build"    : "npm run clean-dist"`
+  * `"frontend:dev:watcher"  : "npm run dev"`
+  * `"frontend:dev:serverUrl": "auto"`
+  * `"debounceMS"            : 500`
+* NOTE: you may need to tweak `debounceMS`
+
+**Adds `wails-nohmr.tmpl.json`:**
+* Offers an alternative to (hopefully) enable Wails automatic reloading when Vite's HMR is disabled
+* See [Disabling HMR](#disabling-hmr) for instructions on disabling HMR
+* Notable properties:
+  * `"reloaddirs"            : "frontend"`
+  * `"frontend:dir"          : "frontend"`
+  * `"frontend:dev:build"    : "npm run clean-dist"`
+  * `"frontend:dev:watcher"  : "npm run dev"`
+  * `"frontend:dev:serverUrl": "auto"`
+  * `"debounceMS"            : 500`
+* NOTE: you may need to tweak `debounceMS`
+
+* **Adds `wails-buildw.tmpl.json`:**
+* Offers an alternative to develop using vite's `build --watch` mode
+* Should (hopefully) support hot-reloading
+* Notable properties:
+  * `"frontend:dir"        : "frontend"`
+  * `"frontend:dev:build"  : "npm run dev-build"`
+  * `"frontend:dev:watcher": "npm run dev-build-watch"`
+  * `"debounceMS"          : 2000`
+* NOTE: you may need to tweak `debounceMS`
 
 ### Sakai (`frontend/`)
 
-**Added the following "hello world" Vue files:**
+**Ran `npm audit fix`:**
+* Updated versions in `package-lock.json`
+
+* **Added the following "hello world" Vue files:**
 * `src/views/pages/Wails.vue`
 * `src/components/Greet.vue`
 
@@ -70,6 +239,28 @@ NOTE: These were adapted from the default wails `vue` template and modified to u
   * Set `name` to be `{{.ProjectName}}`
 * `package-lock.tmpl.json`
   * Set `name` to be `{{.ProjectName}}`
+
+**Modified `vite.config.js`:**
+* Renamed from `vite.config.mjs` to `vite.config.js` as the project has been tagged as `module` type
+* Added the required HMR configuration for Vite 5 + Wails:
+  * `server.hmr.host    : "localhost"`
+  * `server.hmr.protocol: "ws"`
+  * **note:** Likely not needed if you downgrade to Vite 4-
+  * **note:** May not be needed for Vite 6+
+* Added note on disabling HMR (referencing `wails-nohmr.json`)
+
+**Modified `package.json`:**
+* Added `"type": "module"` to be specific about the project's intended default js type
+* Added + Reorganized scripts:
+  * `"clean-dist"     : "rm -rf dist && mkdir dist && touch dist/index.html"`
+  * `"lint"           : "eslint --fix . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"`
+  * `"dev"            : "vite dev"`
+  * `"dev-build"      : "vite build -m development --minify false --logLevel info"`
+  * `"dev-build-watch": "vite build --watch --emptyOutDir false -m development --minify false --logLevel info"`
+  * `"preview"        : "vite preview"`
+  * `"build"          : "vite build"`
+  * `"build-watch"    : "vite build --watch --emptyOutDir false"`
+  * `"vite"           : "vite"`
 
 **Modified `src/router/index.js`**
 * Switched history tracker from `createWebHistory()` to `createWebHashHistory(import.meta.env.BASE_URL)`
@@ -107,7 +298,7 @@ NOTE: These were adapted from the default wails `vue` template and modified to u
 * Removed `Add Sakai-Vue to a Nuxt Project` section
 
 **Added Sakai [Lato fonts [cdnfonts]](https://www.cdnfonts.com/lato.font):**
-* `src/assets/fonts/lato.css`11
+* `src/assets/fonts/lato.css`
 * `src/assets/fonts/lato/OFL.txt`
 * `src/assets/fonts/lato/Lato-BoldItalic.woff`
 * `src/assets/fonts/lato/Lato-SemiBoldItalic.woff`
@@ -129,6 +320,15 @@ NOTE: These were adapted from the default wails `vue` template and modified to u
 * `src/assets/fonts/lato/Lato-Thin.woff`
 * `src/assets/fonts/lato/Lato-MediumItalic.woff`
 * `src/assets/fonts/lato/Lato-Light.woff`
+
+**Modified `package-lock.json`:**
+* Changes as part of running `npm audit fix`
+
+**Modified `postcss.config.cjs`:**
+* Renamed from `postcss.config.js` to `postcss.config.cjs` to match ints js type
+
+**Modified `.eslintrc.cjs`:**
+* Simple reformat to put `extends` entries on separate lines
 
 **Modified `src/service/CustomerService.js`:**
 * Removed `getCustomers(params)` function

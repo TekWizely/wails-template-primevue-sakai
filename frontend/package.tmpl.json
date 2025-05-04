@@ -2,12 +2,17 @@
     "name": "{{.ProjectName}}",
     "version": "4.3.0",
     "private": true,
-    "type": "commonjs",
+    "type": "module",
     "scripts": {
+        "clean-dist": "rm -rf dist && mkdir dist && touch dist/index.html",
+        "lint": "eslint --fix . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
         "dev": "vite",
-        "build": "vite build",
+        "dev-build": "vite build -m development --minify false --logLevel info",
+        "dev-build-watch": "vite build --watch --emptyOutDir false -m development --minify false --logLevel info",
         "preview": "vite preview",
-        "lint": "eslint --fix . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+        "build": "vite build",
+        "build-watch": "vite build --watch --emptyOutDir false",
+        "vite": "vite"
     },
     "dependencies": {
         "@primeuix/themes": "^1.0.0",
@@ -32,5 +37,6 @@
         "tailwindcss": "^3.4.6",
         "unplugin-vue-components": "^0.27.3",
         "vite": "^5.3.1"
-    }
-,"author":""}
+    },
+    "author": ""
+}

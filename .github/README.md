@@ -343,6 +343,7 @@ NOTE: These were adapted from the default wails `vue` template and modified to u
 * `README.md`
 * `public/favicon.ico`
 * `.vscode/`
+* `vercel.json`
 
 **Removed the following entries from `.gitignore`:**
 * `.idea`
